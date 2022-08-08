@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © MageWorx. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="mageworx_order_management">
+            <group id="order_editor">
+                <group id="invoice_shipment_refund">
+                    <field id="enable_usaepay_reauthorization" translate="label comment" type="select" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Enable USA ePay Payment Reauthorization</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>If this setting is enabled, all changes made to the order will attempt to be processed using the payment details stored in the vault.</comment>
+                        <depends>
+                            <field id="sales_processor">keep_untouched</field>
+                        </depends>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

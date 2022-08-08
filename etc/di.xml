@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © MageWorx. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Performing capture operations for a payment which has been captured. Using vault if available. -->
+    <preference for="USAePayCaptureStrategyCommand"
+                type="MageWorx\OrderEditorUSAePay\Gateway\Command\CaptureStrategyCommand" />
+    <type name="MageWorx\OrderEditorUSAePay\Gateway\Command\CaptureStrategyCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">USAePayCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!-- Performing adjustment operations for a payment that has not been captured yet. -->
+    <type name="MageWorx\OrderEditorUSAePay\Observer\UpdateAmountsWithoutInvoice">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">USAePayCommandPool</argument>
+        </arguments>
+    </type>
+
+    <!-- Add new commands to the command pool -->
+    <virtualType name="USAePayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="adjust_positive" xsi:type="string">USAePayAdjustPositiveCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Adjust positive command -->
+    <virtualType name="USAePayAdjustPositiveCommand" type="USAePayAuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">USAePayAdjustPositiveRequest</argument>
+            <argument name="handler" xsi:type="object">USAePayAdjustHandler</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="USAePayAdjustPositiveRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="commondata" xsi:type="string">Rootways\USAePay\Gateway\Request\CommonDataBuilder</item>
+                <item name="order" xsi:type="string">Rootways\USAePay\Gateway\Request\OrderDataBuilder</item>
+                <item name="transactiondata" xsi:type="string">Rootways\USAePay\Gateway\Request\Vault\TransactionDataBuilder</item>
+                <item name="addressdata" xsi:type="string">Rootways\USAePay\Gateway\Request\AddressDataBuilder</item>
+                <item name="level2data" xsi:type="string">Rootways\USAePay\Gateway\Request\LineItemDataBuilder</item>
+                <item name="customerip" xsi:type="string">Rootways\USAePay\Gateway\Request\CustomerIpDataBuilder</item>
+                <item name="adjustTransactionData" xsi:type="string">MageWorx\OrderEditorUSAePay\Gateway\Request\AdjustPositiveTransactionDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Adjustment commands general rules -->
+    <virtualType name="USAePayAdjustHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="payment_details" xsi:type="string">Rootways\USAePay\Gateway\Response\PaymentDetailsHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Add USA ePay payment processor for reauthorization purpose -->
+    <type name="MageWorx\OrderEditor\Model\Invoice\PaymentMethodProcessorFactory">
+        <arguments>
+            <argument name="map" xsi:type="array">
+                <item name="rootways_usaepay_option" xsi:type="string">MageWorx\OrderEditorUSAePay\Model\Invoice\PaymentMethodProcessor\USAePayProcessor</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

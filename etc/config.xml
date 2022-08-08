@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+    Copyright © MageWorx. All rights reserved.
+    See LICENSE.txt for license details.
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mageworx_order_management>
+            <order_editor>
+                <invoice_shipment_refund>
+                    <enable_usaepay_reauthorization>0</enable_usaepay_reauthorization>
+                </invoice_shipment_refund>
+            </order_editor>
+        </mageworx_order_management>
+    </default>
+</config>
