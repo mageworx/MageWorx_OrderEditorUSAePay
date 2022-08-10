@@ -15,13 +15,6 @@
         </arguments>
     </type>
 
-    <!-- Performing adjustment operations for a payment that has not been captured yet. -->
-    <type name="MageWorx\OrderEditorUSAePay\Observer\UpdateAmountsWithoutInvoice">
-        <arguments>
-            <argument name="commandPool" xsi:type="object">USAePayCommandPool</argument>
-        </arguments>
-    </type>
-
     <!-- Add new commands to the command pool -->
     <virtualType name="USAePayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
